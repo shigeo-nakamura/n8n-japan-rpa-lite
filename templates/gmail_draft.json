@@ -1,0 +1,19 @@
+{
+  "name": "Gmail Draft Generator",
+  "nodes": [
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "create",
+        "subject": "={{$json[\"subject\"]}}",
+        "body": "={{$json[\"body\"]}}"
+      },
+      "name": "Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 1,
+      "position": [250, 300]
+    }
+  ],
+  "connections": {},
+  "settings": {}
+}
