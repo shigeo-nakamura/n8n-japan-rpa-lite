@@ -1,0 +1,32 @@
+@startuml
+title 日本向けRPAライトOSS - 全体アーキテクチャ
+
+actor User as U
+
+rectangle "Frontend (Wizard GUI)\nNext.js/Electron" as FE {
+  U --> FE : 業務シナリオ選択\nAPIキー入力など
+}
+
+rectangle "Backend API\n(FastAPI/Express)" as BE {
+  FE --> BE : メタテンプレート要求\n(シナリオ設定)
+  BE --> FE : 実行結果・ログ返却
+}
+
+rectangle "n8n Server\n(self-hosted)" as N8N {
+  BE --> N8N : REST API\n(ワークフロー登録/実行)
+  N8N --> BE : 実行ログ/エラー
+}
+
+rectangle "Template Store\n(JSON, YAML)" as TS {
+  BE --> TS : ワークフロー雛形を読み込み
+}
+
+rectangle "Secrets Vault\n(認証情報管理)" as SV {
+  BE --> SV : APIキー/認証情報保存・取得
+}
+
+rectangle "External SaaS/Systems" as EXT {
+  N8N --> EXT : Gmail / Slack通知 / kintone登録 ...
+}
+
+@enduml
