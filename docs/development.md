@@ -34,6 +34,9 @@ N8N_URL=http://localhost:5678/api/v1
 
 # n8n の API Key（起動後に UI から発行して追記）
 N8N_API_KEY=
+
+# OpenAI API Key（AI機能を使用する場合）
+OPENAI_API_KEY=your-openai-api-key
 ```
 
 ### 2.2 `docker-compose.yml` を利用
@@ -120,6 +123,57 @@ uvicorn backend.main:app --reload
   export N8N_URL="http://localhost:5678/api/v1"
   export N8N_API_KEY="your_generated_api_key"
   ```
+
+---
+
+## 7. AI機能の設定（オプション）
+
+### 7.1 OpenAI API Keyの取得
+
+AI機能（メール返信ドラフト生成など）を使用する場合は、OpenAI APIキーが必要です。
+
+1. **OpenAI アカウント作成**
+   - https://platform.openai.com/ にアクセス
+   - アカウントを作成しログイン
+
+2. **API Key発行**
+   - https://platform.openai.com/api-keys にアクセス
+   - 「Create new secret key」をクリック
+   - 生成されたAPIキーをコピー（後で確認できないため必ず保存）
+
+3. **環境変数に設定**
+   ```bash
+   # .env ファイルを編集
+   OPENAI_API_KEY="sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   ```
+
+### 7.2 AI機能の動作確認
+
+```bash
+# 仮想環境をアクティベート
+source backend/.venv/bin/activate
+
+# FastAPIサーバーを起動
+uvicorn backend.main:app --reload
+```
+
+APIエンドポイントでテスト：
+```bash
+curl -X POST "http://127.0.0.1:8000/gmail/draft" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "subject": "会議の件について",
+    "body": "来週の企画会議の議題について確認したいことがあります。",
+    "workflow_id": 1
+  }'
+```
+
+### 7.3 AI機能が無効の場合
+
+OpenAI API Keyが設定されていない場合も、システムは正常に動作します：
+- AI機能はダミーの返信文を生成
+- その他の機能は通常通り利用可能
+- エラーは発生しません
 
 ---
 
